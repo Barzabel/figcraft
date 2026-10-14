@@ -446,8 +446,9 @@ fn duplicate(s: &mut Session, p: &Value) -> Result<Value> {
 fn bump_name(n: &str) -> String {
     if let Some((base, num)) = n.rsplit_once(' ')
         && let Ok(k) = num.parse::<u64>()
+        && let Some(next) = k.checked_add(1)
     {
-        return format!("{base} {}", k + 1);
+        return format!("{base} {next}");
     }
     format!("{n} 2")
 }
@@ -803,7 +804,7 @@ pub fn opacity_from_digits(digits: &str) -> Option<f32> {
     let mut n = 0u32;
     let mut count = 0;
     for c in digits.chars() {
-        n = n * 10 + c.to_digit(10)?;
+        n = n.checked_mul(10)?.checked_add(c.to_digit(10)?)?;
         count += 1;
     }
     match count {

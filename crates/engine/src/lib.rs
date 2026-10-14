@@ -1501,6 +1501,8 @@ mod measure_tests;
 #[cfg(test)]
 mod menu_gaps_tests;
 #[cfg(test)]
+mod name_overflow_tests;
+#[cfg(test)]
 mod nested_override_tests;
 #[cfg(test)]
 mod online_tests;

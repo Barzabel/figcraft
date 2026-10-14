@@ -186,6 +186,7 @@ fn opacity_digits() {
     assert_eq!(opacity_from_digits("00"), Some(0.0));
     assert_eq!(opacity_from_digits(""), None);
     assert_eq!(opacity_from_digits("123"), None);
+    assert_eq!(opacity_from_digits("99999999999999999999"), None, "a long string doesn't overflow (#309)");
     assert_eq!(opacity_from_digits("4x"), None);
     assert_eq!(opacity_from_digits("٣"), None, "ASCII digits only");
 

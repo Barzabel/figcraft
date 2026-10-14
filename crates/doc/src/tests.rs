@@ -333,6 +333,9 @@ fn next_name_increments() {
     d.create(p, NodeKind::Frame, "Frame 7", 0.0, 0.0, 1.0, 1.0).unwrap();
     assert_eq!(d.next_name("Frame"), "Frame 8");
     assert_eq!(d.next_name("Ellipse"), "Ellipse 1");
+    // A name at the top of `u64` (#309): the lowest number not taken instead of an overflow.
+    d.create(p, NodeKind::Frame, &format!("Frame {}", u64::MAX), 0.0, 0.0, 1.0, 1.0).unwrap();
+    assert_eq!(d.next_name("Frame"), "Frame 2");
 }
 
 #[test]

@@ -901,17 +901,13 @@ impl Document {
     }
 
     /// A unique name like "Frame 3" for a new node of a kind.
+    /// After the highest number taken; the lowest free one when that is the top of `u64`.
     pub fn next_name(&self, base: &str) -> String {
-        let mut max = 0u64;
-        for n in self.nodes() {
-            if let Some(rest) = n.name.strip_prefix(base)
-                && let Some(num) = rest.strip_prefix(' ')
-                && let Ok(k) = num.parse::<u64>()
-            {
-                max = max.max(k);
-            }
-        }
-        format!("{base} {}", max + 1)
+        let taken: std::collections::BTreeSet<u64> =
+            self.nodes().filter_map(|n| n.name.strip_prefix(base)?.strip_prefix(' ')?.parse::<u64>().ok()).collect();
+        let next = taken.last().map_or(Some(1), |max| max.checked_add(1));
+        let next = next.or_else(|| (1..).find(|k| !taken.contains(k))).unwrap_or(1);
+        format!("{base} {next}")
     }
 
     pub fn style(&self, id: &str) -> Option<&Style> {
